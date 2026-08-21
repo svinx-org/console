@@ -1,0 +1,42 @@
+#!/usr/bin/env php
+<?php
+
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+use Svinx\Console\Console;
+
+$program = new Console();
+
+$program
+    ->name('eorbah')
+    ->description('Eorbah Console MVP')
+    ->version('0.1.0');
+
+$program
+    ->command('serve')
+    ->description('Start development server')
+    ->option('-p, --port <port>', 'Server port', 8000)
+    ->option('-H, --host <host>', 'Server host', '127.0.0.1')
+    ->option('--background', 'Run in background', false)
+    ->action(function ($input) {
+        printf("Starting server on %s:%d%s" . PHP_EOL,
+            $input->option('host'),
+            $input->option('port'),
+            $input->option('background') ? ' (background)' : ''
+        );
+        return 0;
+    });
+
+$program
+    ->command('make <name>')
+    ->description('Create a controller')
+    ->option('--api', 'Create an API controller', false)
+    ->action(function ($input) {
+        printf("Creating controller %s%s" . PHP_EOL,
+            $input->argument('name'),
+            $input->option('api') ? ' (API)' : ''
+        );
+        return 0;
+    });
+
+exit($program->parse());

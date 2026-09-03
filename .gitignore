@@ -3,7 +3,7 @@ composer.lock
 /.archive/
 .env
 dump.rdb
-.php-cs-fixer.cache
+.phpunit.result.cache
 .vscode
 NOTES.md
 main.php

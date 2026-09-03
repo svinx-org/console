@@ -1,6 +1,7 @@
 {
   "name": "svinx/console",
   "description": "A small fluent PHP CLI framework.",
+  "version": "0.1.0",
   "type": "library",
   "license": "MIT",
   "require": {
@@ -30,12 +31,8 @@
       "Svinx\\Console\\Tests\\": "tests/"
     }
   },
-  "bin": [
-    "bin/svinx-console"
-  ],
   "scripts": {
     "test": "phpunit",
-    "demo": "svinx-console",
     "lint": "php -l src/Console.php && php -l src/Command.php && php -l src/Option.php && php -l src/Argument.php && php -l src/Input.php && php -l src/Output.php && php -l src/Parser.php"
   }
 }

@@ -1,0 +1,65 @@
+#!/usr/bin/env php
+<?php
+
+require __DIR__ . '/../vendor/autoload.php';
+
+use Svinx\Console\Prompts\MultiProgressBar;
+use Svinx\Console\Prompts\Prompt;
+use Svinx\Console\Prompts\ProgressBar;
+
+// --- Questions individuelles -----------------------------------------
+
+$name = Prompt::text('Nom du projet ?', default: 'my-app');
+
+$password = Prompt::password('Mot de passe DB ?', validate: function (string $v) {
+    return strlen($v) >= 6 ? true : 'Au moins 6 caractères.';
+});
+
+$useGit = Prompt::confirm('Initialiser Git ?');
+
+$workers = Prompt::number('Nombre de workers ?', default: 4, min: 1, max: 32);
+
+$driver = Prompt::select('Base de données ?', [
+    ['label' => 'SQLite', 'value' => 'sqlite'],
+    ['label' => 'MySQL', 'value' => 'mysql'],
+    ['label' => 'PostgreSQL', 'value' => 'pgsql'],
+]);
+
+$features = Prompt::multiselect('Fonctionnalités à activer ?', [
+    ['label' => 'Cache', 'value' => 'cache', 'checked' => true],
+    ['label' => 'Queue', 'value' => 'queue'],
+    ['label' => 'WebSockets', 'value' => 'ws'],
+]);
+
+echo "\nRésumé : " . json_encode(compact('name', 'useGit', 'workers', 'driver', 'features'), JSON_PRETTY_PRINT) . "\n\n";
+
+// --- Ou en une seule fois, façon inquirer.prompt() --------------------
+
+$answers = Prompt::ask([
+    ['type' => 'text', 'name' => 'appName', 'message' => 'Nom de l\'app ?'],
+    ['type' => 'confirm', 'name' => 'useDocker', 'message' => 'Utiliser Docker ?', 'default' => true],
+]);
+
+// --- Barre de progression pour un téléchargement -----------------------
+
+$total = 15_728_640; // ~15 Mb
+$bar = ProgressBar::forDownload($total, prefix: 'main.zip');
+
+for ($sent = 0; $sent < $total; $sent += 512_000) {
+    usleep(20_000);
+    $bar->advance(512_000);
+}
+$bar->finish();
+
+// --- Plusieurs téléchargements en parallèle -----------------------------
+
+$bars = new MultiProgressBar();
+$bars->add('a', total: 5_000_000, prefix: 'fichier-a.zip');
+$bars->add('b', total: 9_000_000, prefix: 'fichier-b.zip');
+
+for ($i = 0; $i < 20; $i++) {
+    usleep(50_000);
+    $bars->advance('a', 250_000);
+    $bars->advance('b', 450_000);
+}
+$bars->finishAll();

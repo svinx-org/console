@@ -28,7 +28,7 @@ $program
     });
 
 $program
-    ->command('make <name>')
+    ->command('make:controller <name>')
     ->description('Create a controller')
     ->option('--api', 'Create an API controller', false)
     ->action(function ($input) {

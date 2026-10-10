@@ -14,7 +14,7 @@ A small, fluent PHP CLI framework inspired by Commander.js.
 
 require __DIR__ . '/vendor/autoload.php';
 
-use Eorbah545\Console\Console;
+use Svinx\Console\Console;
 
 $program = new Console();
 
